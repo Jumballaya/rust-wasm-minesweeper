@@ -1,0 +1,15 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf pkg && rm -rf target",
+    "build:wasm": "wasm-pack build --release --target web",
+    "start:web": "serve",
+    "start": "npm run build:wasm && npm run start:web"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
