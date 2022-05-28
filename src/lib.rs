@@ -37,7 +37,7 @@ pub fn flag_field(x: usize, y: usize) {
 
 #[wasm_bindgen(js_name = "checkWin")]
 pub fn check_win() -> bool {
-    MINESWEEPER.with(|ms| ms.borrow().check_win())
+    MINESWEEPER.with(|ms| ms.borrow().won)
 }
 
 #[wasm_bindgen(js_name = "checkLost")]

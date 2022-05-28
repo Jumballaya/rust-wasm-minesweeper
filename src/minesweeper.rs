@@ -18,6 +18,7 @@ pub struct Minesweeper {
     mines: HashSet<Position>,
     flagged_fields: HashSet<Position>,
     pub lost: bool,
+    pub won: bool,
 }
 
 impl Display for Minesweeper {
@@ -27,7 +28,7 @@ impl Display for Minesweeper {
                 let pos = (x, y);
                 if !self.open_fields.contains(&pos) {
                     if self.lost && self.mines.contains(&pos) {
-                        f.write_str("💣 ");
+                        f.write_str("💣 ")?;
                     } else if self.flagged_fields.contains(&pos) {
                         f.write_str("🚩 ")?;
                     } else {
@@ -36,7 +37,7 @@ impl Display for Minesweeper {
                 } else if self.mines.contains(&pos) {
                     f.write_str("💣 ")?;
                 } else {
-                    write!(f, " {} ", self.neighboring_mines(pos));
+                    write!(f, " {} ", self.neighboring_mines(pos))?;
                 }
             }
 
@@ -63,6 +64,7 @@ impl Minesweeper {
             },
             flagged_fields: HashSet::new(),
             lost: false,
+            won: false,
         }
     }
 
@@ -101,7 +103,7 @@ impl Minesweeper {
             return None;
         }
 
-        if self.lost || self.flagged_fields.contains(&position) {
+        if self.lost || self.won || self.flagged_fields.contains(&position) {
             return None;
         }
 
@@ -119,12 +121,13 @@ impl Minesweeper {
                     }
                 }
             }
+            self.won = self.check_win();
             Some(OpenResult::NoMine(0))
         }
     }
 
     pub fn toggle_flag(&mut self, position: Position) {
-        if self.lost || self.open_fields.contains(&position) {
+        if self.lost || self.won || self.open_fields.contains(&position) {
             return;
         }
         if self.flagged_fields.contains(&position) {
