@@ -20,22 +20,25 @@ class MineField extends HTMLElement {
       const cols = this.data?.[0]?.length || 10;
       gameBoard.style.gridTemplate = `repeat(${rows}, 48px) / repeat(${cols}, 44px)`;
 
-      for (const btn of gameBoard.querySelectorAll('.field-button')) {
-        btn.addEventListener('click', e => {
-          e.preventDefault();
-          const x = btn.getAttribute('x');
-          const y = btn.getAttribute('y');
+      this.shadowRoot.addEventListener('click', e => {
+        e.preventDefault();
+        const x = parseInt(e.target.getAttribute('x'));
+        const y = parseInt(e.target.getAttribute('y'));
+        if (!isNaN(x) && !isNaN(y)) {
           const event = new CustomEvent('minesweeper-check-mine', { detail: [x, y] });
           this.dispatchEvent(event);
-        });
-        btn.addEventListener('contextmenu', e => {
-          e.preventDefault();
-          const x = btn.getAttribute('x');
-          const y = btn.getAttribute('y');
+        }
+      });
+      this.shadowRoot.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        const x = parseInt(e.target.getAttribute('x'));
+        const y = parseInt(e.target.getAttribute('y'));
+        console.log(x,y);
+        if (!isNaN(x) && !isNaN(y)) {
           const event = new CustomEvent('minesweeper-flag-mine', { detail: [x, y] });
           this.dispatchEvent(event);
-        })
-      }
+        }
+      });
     }
   }
 
